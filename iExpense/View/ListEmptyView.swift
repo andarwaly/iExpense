@@ -44,6 +44,7 @@ struct ListEmptyView: View {
                 
             }
         }
+        .frame(maxWidth:.infinity, maxHeight:.infinity)
     }
 }
 

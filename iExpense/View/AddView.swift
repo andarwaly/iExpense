@@ -15,38 +15,55 @@ struct AddView: View {
     
     var expenses: Expenses
     
-    let types = ["Personal", "Business"]
+    let types: [String: String] = [
+        "Personal": "person.fill",
+        "Business": "suitcase.fill"
+    ]
+    let orderedTypes = ["Personal", "Business"]
     
     // Pake environment, karena sheet di kontrol pada view yang beda
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
+            // Container
             VStack (spacing: 32) {
                 // User input
-                VStack (alignment: .leading, spacing: 24) {
+                VStack (alignment: .leading, spacing: 16) {
                     // Expense name
                     VStack (alignment: .leading, spacing: 8){
                         Text("Expense Name")
+                            .foregroundStyle(.secondary)
                         TextField("Your expense name", text: $name)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
                             .padding(10)
                             .background(Color.white)
                             .cornerRadius(6)
-                            .shadow(color: .black.opacity(0.08), radius: 2)
+                            .shadow(color: .black.opacity(0.12), radius: 2)
                     }
+                    Divider()
                     // Expense Type
                     HStack (spacing: 8) {
                         Text("Expense Type")
+                            .foregroundStyle(.secondary)
                         Spacer()
                         Picker("Type", selection: $type) {
-                            ForEach(types, id: \.self) {
-                                Text($0)
+                            ForEach(orderedTypes, id: \.self) { type in
+                                HStack (spacing: 8) {
+                                    Text(type)
+                                    Image(systemName: types[type]!)
+                                }
+                                .tag(type)
                             }
                         }
+                        
                     }
+                    Divider()
                     // Expense Amount
                     VStack (alignment: .leading, spacing: 8) {
                         Text("Amount")
+                            .foregroundStyle(.secondary)
                         TextField("Amount", value: $amount, format: .currency(code: "IDR")) // make it dynamic depending on the user
                             .keyboardType(.decimalPad)
                             .padding(10)
@@ -61,7 +78,7 @@ struct AddView: View {
                 .shadow(color: .black.opacity(0.12), radius: 2)
                 .padding(.top, 16)
                 
-                Spacer()
+//                Spacer()
                 
                 // Save Button
                 Button {
@@ -79,6 +96,7 @@ struct AddView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     
                 }
+//                .padding(.bottom, 16)
             }
             .padding(16)
             .navigationBarTitleDisplayMode(.inline)

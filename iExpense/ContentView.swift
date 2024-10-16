@@ -18,35 +18,26 @@ struct ContentView: View {
                 switch expenses.items.isEmpty {
                 case true:
                     ListEmptyView(action: showAddExpense)
-                        .navigationTitle("iExpenses")
                 case false:
-                    VStack {
-                        List {
-                            ForEach(expenses.items) { item in  // does't need ID -> already conform to identifiable
-                                Text(item.name)
-                            }
-                            .onDelete(perform: removeExpense)
-                        }
-                        .navigationTitle("iExpenses")
-                        .toolbar {
-                            Button("Add Expense", systemImage: "plus") {
-                                showingAddExpense = true
-                            }
-                        }
-                    }
+                    FilledListView(items: expenses, action: showAddExpense)
                 }
             }
         }
         .sheet(isPresented: $showingAddExpense) {
             AddView(expenses: expenses)
+//                .presentationSizing(.fitted)
                 .presentationDetents([.medium])
+                .presentationContentInteraction(.scrolls)
+                .presentationCornerRadius(20)
                 .background(Color(red: 0.95, green: 0.95, blue: 0.95))
         }
         .animation(.spring(duration: 0.35, bounce: 0.6), value: expenses.items.isEmpty)
     }
     
     func showAddExpense() {
-        showingAddExpense = true
+        withAnimation (.spring(duration: 0.25, bounce: 0.6)) {
+            showingAddExpense = true
+        }
     }
     
     // Delete Function
